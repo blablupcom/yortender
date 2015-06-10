@@ -1,12 +1,12 @@
  # -*- coding: utf-8 -*-
+import sys
+reload(sys) # Reload does the trick!
+sys.setdefaultencoding('UTF8')
 from datetime import datetime
 import urllib
 #import BeautifulSoup
 from bs4 import BeautifulSoup
 from bs4 import NavigableString
-import csv
-import time
-from pandas import read_csv
 import scraperwiki
 
 def get_links_list (source_url):
@@ -148,12 +148,12 @@ if __name__ == '__main__':
 
     todays_date = str(datetime.now())
     portals = [
-    #'https://www.londontenders.org/procontract/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
-    # 'https://www.bluelight.gov.uk/procontract/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
+    # 'https://www.londontenders.org/procontract/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
+    #'https://www.bluelight.gov.uk/procontract/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.fxplustenders.org/procontract/fxplus/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.lppsourcing.org/procontract/lpp/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.advantageswtenders.co.uk/procontract/advantage/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
-    ## 'https://www.bankofenglandtenders.co.uk/procontract/BankOfEngland/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
+    # 'https://www.bankofenglandtenders.co.uk/procontract/BankOfEngland/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.channelislandtenders.com/procontract/channelislands/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.eastmidstenders.org/procontract/emp/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
     # 'https://www.eastridingcontractsfinder.co.uk/procontract/eastriding/supplier.nsf/frm_planner_search_results?OpenForm&contains=&cats=&order_by=DATE&all_opps=CHECK&org_id=ALL',
@@ -185,10 +185,12 @@ if __name__ == '__main__':
     ]
 
 
-    df = read_csv("dn16b.csv") # use pandas to open csv
-    saved_urls = df['tender_url'].values.tolist() # convert column to list
 
-    resultFile = open("dn16b.csv",'a')
+    # saved_urls = df.values.tolist() # convert column to list
+    # df = read_csv("dn16b.csv") # use pandas to open csv
+    # saved_urls = df['tender_url'].values.tolist() # convert column to list
+    #
+    # resultFile = open("dn16b.csv",'a')
 
 
     for portal in portals:
@@ -234,11 +236,12 @@ if __name__ == '__main__':
 
                 attach_list = []
                 attach_list = get_attachments(tender_soup)
+                scraperwiki.sqlite.save(unique_keys=['l'], data={"l":unicode(link), "tender_id": unicode(tender_id), "buyer": unicode(buyer), "title" : unicode(title), "categories": unicode(categories), "contact_name": unicode(contact_name), "contact_phone": unicode(contact_phone), "contact_addr": unicode(contact_addr), "contact_email": unicode(contact_email), "contract_start": contract_start, "contract_end": contract_end, "eoi_start": eoi_start, "eoi_end": eoi_end, "est_value": unicode(est_value), "contract_duration": unicode(contract_duration), "extension_duration": unicode(extension_duration), "extension_iterations": unicode(extension_iterations), "summary": unicode(summary), "attach_list": unicode(attach_list),"d": todays_date })
 
-                csv_row = [link, tender_id,buyer,title,summary,categories,contact_name,contact_phone,contact_email,contact_addr,contract_start,contract_end,eoi_start,eoi_end,est_value,contract_duration,extension_duration,extension_iterations,attach_list]
-
-                wr = csv.writer(resultFile, quoting=csv.QUOTE_ALL, delimiter=',')
-                wr.writerow(csv_row)
+                # csv_row = [link, tender_id,buyer,title,summary,categories,contact_name,contact_phone,contact_email,contact_addr,contract_start,contract_end,eoi_start,eoi_end,est_value,contract_duration,extension_duration,extension_iterations,attach_list]
+                #
+                # wr = csv.writer(resultFile, quoting=csv.QUOTE_ALL, delimiter=',')
+                # wr.writerow(csv_row)
 
 
 
